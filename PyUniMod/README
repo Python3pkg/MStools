@@ -1,0 +1,110 @@
+David's useful Unimod Wrapper
+=============================
+
+
+This is a simple python module to wrap the Unimod XML file in a readily 
+accessible form for python programemrs. 
+A copy of the unimod.xml file is included.
+
+Dependencies
+============
+No dependencies that are not in a standard >2.4 python distribution.
+
+Usage
+=====
+
+1. simple usage. Use the built in file. 
+
+>>> import Unimod.unimod
+>>> db=Unimod.unimod.database
+
+2. Use your own file
+>>> import Unimod.Database
+>>> db=Unimod.Database.Database(file="my unimod file")
+
+3.  Getting element info
+Use the get_element(label) method and a dictionary is returned.
+>>> db.get_element('H')
+{'avge_mass': '1.00794', 'title': 'H', 'full_name': 'Hydrogen', 'mono_mass': '1.007825035'}
+
+All labels are supported, and additionally the common isotopes as labels as well
+
+>>> db.get_element('O')
+{'avge_mass': '15.9994', 'title': 'O', 'full_name': 'Oxygen', 'mono_mass': '15.99491463'}
+>>> db.get_element('18O')
+{'avge_mass': '17.9991603', 'title': '18O', 'full_name': 'Oxygen18', 'mono_mass': '17.9991603'}
+>>> db.get_element('16O')
+{'avge_mass': '15.9994', 'title': 'O', 'full_name': 'Oxygen', 'mono_mass': '15.99491463'}
+
+4. getting modification info
+
+Use the get_label(modification) method
+>>> db.get_label('Phospho')
+{'delta_mono_mass': '79.966331',
+'group_of_poster': 'admin', 
+'delta_avge_mass': '79.9799', 
+'username_of_poster': 'unimod', 
+'title': 'Phospho', 
+'delta_composition': 'H O(3) P', 
+'sites': {
+    'C': {'position': 'Anywhere', 'hidden': 'true', 'site': 'C', 'classification': 'Post-translational', 'spec_group': '5'}, 
+    'D': {'position': 'Anywhere', 'hidden': 'true', 'site': 'D', 'classification': 'Post-translational', 'spec_group': '3'}, 
+    'H': {'position': 'Anywhere', 'hidden': 'true', 'site': 'H', 'classification': 'Post-translational', 'spec_group': '4'}, 
+    'K': {'position': 'Anywhere', 'hidden': 'true', 'site': 'K', 'classification': 'Other', 'spec_group': '7'}, 
+    'S': {'position': 'Anywhere', 'hidden': 'false', 'site': 'S', 'classification': 'Post-translational', 'spec_group': '1'}, 
+    'R': {'position': 'Anywhere', 'hidden': 'true', 'site': 'R', 'classification': 'Post-translational', 'spec_group': '6'}, 
+    'T': {'position': 'Anywhere', 'hidden': 'false', 'site': 'T', 'classification': 'Post-translational', 'spec_group': '1'}, 
+    'Y': {'position': 'Anywhere', 'hidden': 'false', 'site': 'Y', 'classification': 'Post-translational', 'spec_group': '2'}
+}, 
+'spec_group': {
+    '1': ['T', 'S'], 
+    '3': ['D'], 
+    '2': ['Y'], 
+    '5': ['C'], 
+    '4': ['H'], 
+    '7': ['K'], 
+    '6': ['R']
+}, 
+'date_time_posted': '2002-08-19 19:17:11', 
+'date_time_modified': '2011-11-25 10:55:54', 
+'full_name': 'Phosphorylation', 
+'record_id': '21', 
+'approved': 'true'
+}
+
+In this dictionary are two fields, 'sites' which contains info for each amino acid, and 'spec_group' which contains the specificity grouping for the modification.
+
+5. Searching for labels
+Pass a regular expression in text form to the list_labels method.
+
+>>> db.list_labels('.*Phospho.*')
+['Phosphoguanosine', 'Phosphopantetheine', 'PhosphoHex', 'Phosphopropargyl', 'PhosphoribosyldephosphoCoA', 'PhosphoHexNAc', 'Phosphoadenosine', 'PhosphoUridine', 'Phosphogluconoylation', 'Label:13C(9)+Phospho', 'Phospho'] 
+
+Author
+======
+
+Dr David Martin, University of Dundee, UK. d.m.a.martin@dundee.ac.uk
+
+Copyright
+=========
+
+(c) David Martin 2012
+
+License
+=======
+
+Unimod data is redistributed under the terms of the licensing described on the 
+Unimod website http://www.unimod.org - in short you can redistribute the data 
+included as long as you permit unrestricted subsequent redistribution.
+
+The software code is licensed under the Creative Commons Attribution License 
+http://creativecommons.org/licenses/by/3.0/ You may use, alter and publish work
+based on the code as long as you acknowledge the use of the code with an 
+appropriate statement such as this in the copyright/attribution/help text: "Includes the python Unimod wrapper by Dr David Martin, University of Dundee".
+
+
+
+
+
+
+

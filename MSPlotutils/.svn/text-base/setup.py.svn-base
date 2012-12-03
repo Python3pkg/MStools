@@ -1,0 +1,10 @@
+from setuptools import setup, find_packages
+setup(
+    name='MS Plotting Utilities',
+    version="0.1.3.5i",
+    packages=['MSPlot'],
+    install_requires=[''],
+    author = "David Martin",
+    author_email = "d.m.a.martin@dundee.ac.uk",
+    )
+
