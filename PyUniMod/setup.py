@@ -7,6 +7,7 @@ setup(
     install_requires=[''],
     package_data= {'':['unimod.xml'],},
     author = "David Martin",
+    url='https://github.com/davidmam/MStools',
     author_email = "d.m.a.martin@dundee.ac.uk",
     )
 

@@ -7,5 +7,6 @@ setup(
     install_requires=['matplotlib', 'pyteomics', 'pymzml'],
     author = "David Martin",
     author_email = "d.m.a.martin@dundee.ac.uk",
+    url='https://github.com/davidmam/MStools'
     )
 
