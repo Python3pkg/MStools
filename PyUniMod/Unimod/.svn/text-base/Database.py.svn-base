@@ -38,7 +38,11 @@ class Database():
             ma['spec_group']={}
             for r in e.findall('%sspecificity'%self.xmlns):
                 if self.hidden==True or r.attrib['hidden']==False:
-                    ma['sites'][r.attrib['site']]=r.attrib  
+                    ma['sites'][r.attrib['site']]=r.attrib
+                    ma['sites'][r.attrib['site']]['NeutralLoss']=[]
+                    # add NeutralLoss
+                    for n in r.findall('%sNeutralLoss'%self.xmlns):
+                        ma['sites'][r.attrib['site']]['NeutralLoss'].append(n.attrib)
                     # add to aa mods list.
 
                     if self.residues.has_key(r.attrib['site']):
@@ -62,3 +66,33 @@ class Database():
         return el
 
 
+    def list_labels(self, search):
+        labels=[]
+        lre=re.compile(search)
+        for k in self.modifications.keys():
+            l=lre.search(k)
+            if l !=None:
+                labels.append(k)
+        return labels
+    
+    def get_neutral_loss(self, label, site):
+        mod=self.modifications.get(label,None)
+        if mod !=None:
+            try:
+                nl=[]
+                for n in mod['sites'][site]['NeutralLoss']:
+                    if n['composition']!='0':
+                        nl.append(n)
+                return nl
+            except:
+                return []
+        return []
+
+    def get_delta_mono(self, label):
+        mod=self.modifications.get(label,None)
+        if mod !=None:
+            try:
+                val=float(mod['delta_mono_mass'])
+                return val
+            except:
+                pass

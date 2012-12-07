@@ -1,8 +1,8 @@
 Metadata-Version: 1.0
 Name: Unimod
-Version: 0.1.0
+Version: 0.1.1
 Summary: simple wrapper around the Unimod amino acid modificatins database
-Home-page: UNKNOWN
+Home-page: https://github.com/davidmam/MStools
 Author: David Martin
 Author-email: d.m.a.martin@dundee.ac.uk
 License: UNKNOWN

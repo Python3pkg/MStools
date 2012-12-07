@@ -74,6 +74,12 @@ Use the get_label(modification) method
 
 In this dictionary are two fields, 'sites' which contains info for each amino acid, and 'spec_group' which contains the specificity grouping for the modification.
 
+5. Searching for labels
+Pass a regular expression in text form to the list_labels method.
+
+>>> db.list_labels('.*Phospho.*')
+['Phosphoguanosine', 'Phosphopantetheine', 'PhosphoHex', 'Phosphopropargyl', 'PhosphoribosyldephosphoCoA', 'PhosphoHexNAc', 'Phosphoadenosine', 'PhosphoUridine', 'Phosphogluconoylation', 'Label:13C(9)+Phospho', 'Phospho'] 
+
 Author
 ======
 
