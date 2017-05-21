@@ -1,4 +1,4 @@
-import Unimod.Database
+from . import Unimod.Database
 import os
 __all__=['database']
 

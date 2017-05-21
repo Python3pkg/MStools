@@ -32,7 +32,7 @@ class Database():
         for e in node.findall('%smodifications/%smod'%(self.xmlns, self.xmlns)):
             ma=e.attrib
             d=e.findall("%sdelta"%self.xmlns)[0]
-            for k in d.attrib.keys():
+            for k in list(d.attrib.keys()):
                 ma['delta_%s'%k]=d.attrib[k]
             ma['sites']={}
             ma['spec_group']={}
@@ -45,12 +45,12 @@ class Database():
                         ma['sites'][r.attrib['site']]['NeutralLoss'].append(n.attrib)
                     # add to aa mods list.
 
-                    if self.residues.has_key(r.attrib['site']):
+                    if r.attrib['site'] in self.residues:
                         self.residues[r.attrib['site']].append(ma['title'])
                     else:
                         self.residues[r.attrib['site']]=[ma['title'],]
 
-                    if ma['spec_group'].has_key(r.attrib['spec_group']):
+                    if r.attrib['spec_group'] in ma['spec_group']:
                         ma['spec_group'][r.attrib['spec_group']].append(r.attrib['site'])
                     else:
                         ma['spec_group'][r.attrib['spec_group']]=[r.attrib['site'],]
@@ -69,7 +69,7 @@ class Database():
     def list_labels(self, search):
         labels=[]
         lre=re.compile(search)
-        for k in self.modifications.keys():
+        for k in list(self.modifications.keys()):
             l=lre.search(k)
             if l !=None:
                 labels.append(k)

@@ -35,11 +35,11 @@ def main():
     parser.add_option("-d","--ms2win", dest="ms2win",help="MS2 ion capture window size", type="float", default=2.0)
 
     (options,args)=parser.parse_args()
-    print "options settings:"
+    print("options settings:")
     stdval=dir(optparse.Values)
     for p in dir(options):
       if p not in stdval:
-        print "--%s:\t%s"%(p,getattr(options,p))
+        print("--%s:\t%s"%(p,getattr(options,p)))
     #  print "--%s"%p
 
     run=None
@@ -55,7 +55,7 @@ def main():
       featfiles=options.feature.split(",")
     
     except:
-      print "no features or no colours specified"
+      print("no features or no colours specified")
       featfiles=[]
       
     try:
@@ -81,7 +81,7 @@ def main():
 def plot3d (mzml, featfiles=[], outfile='plot.pdf', show=False, xrot=30, yrot=-45, featcols=['r','g','b','m','c','k'], thresh=100, minrt=None,maxrt=None,minmz=None, maxmz=None, ms2win=2.0, rtwindow=20.0, plotms2=True):
     try:
       run=pymzml.run.Reader(mzml, MS1_Precision = 20e-6 )
-    except Exception, e:
+    except Exception as e:
       raise Exception( "Error opening mzML file: %s"%e)
 
     isline=True
@@ -91,17 +91,17 @@ def plot3d (mzml, featfiles=[], outfile='plot.pdf', show=False, xrot=30, yrot=-4
     rtdat=[]
     verts=[]
     msmsruns=[]
-    print featcols
+    print(featcols)
     if 1:
-      feat=run.next()
+      feat=next(run)
       while feat['scan time']*60 < minrt:
-        feat=run.next()
-      print "starting scan processing\n"
+        feat=next(run)
+      print("starting scan processing\n")
       while feat['scan time']*60 < maxrt:
         while feat['ms level'] != 1:
           if feat['MS:1000744'] >minmz-ms2win and feat['MS:1000744']<maxmz:  
             msmsruns.append({"total ion current": feat['total ion current'], 'parent m/z': feat['MS:1000744'], 'charge': feat['MS:1000511'],'scan time': feat['scan time']*60}) 
-          feat=run.next()
+          feat=next(run)
         mzrow=[]
         introw=[]
         rtrow=[]
@@ -145,17 +145,17 @@ def plot3d (mzml, featfiles=[], outfile='plot.pdf', show=False, xrot=30, yrot=-4
       #rtdat.append(array(rtrow))
       #  verts.append(array(zip(mzrow, introw)))
       # print "added spectrum at rt %s\n"%rt
-        feat=run.next()
+        feat=next(run)
     featuredata=[]
     for ff in range(len(featfiles)):
       zval=(ff+1)*10000
-      print "getting features from %s"%featfiles[ff]
+      print("getting features from %s"%featfiles[ff])
       features=parseFeatureXML.Reader(featfiles[ff])
       fl=getWindow.FeatureLocation(features)
       featureplot=[]
-      print "Window %s,%s,%s,%s"%(minrt, maxrt, minmz, maxmz)
+      print("Window %s,%s,%s,%s"%(minrt, maxrt, minmz, maxmz))
       for f in fl.getFeatures_rtWindow(minrt-rtwindow, maxrt+rtwindow):
-        print features['mz']
+        print(features['mz'])
         if float(features['mz'])<maxmz and float(features['mz'])>minmz:
           #print "found feature %s"%features['convexhull']
           ymin=float(features['convexhull'][0][0]['y'])
@@ -188,7 +188,7 @@ def plot3d (mzml, featfiles=[], outfile='plot.pdf', show=False, xrot=30, yrot=-4
             featuredata.append((xs,ys,zs,ff%len(featcols)))
     #poly = LineCollection(verts)
     #print "lengths: rt %s, int %s, mz %s"%(len(rtdat), len(intdat),len(mzdat))
-    print "plotting figure\n"            
+    print("plotting figure\n")            
     plot3d_data((mzdat,rtdat,intdat), msmsruns, featuredata, outfile=outfile, show=show, xrot=xrot, yrot=yrot, featcols=featcols, thresh=thresh, ms2win=ms2win, rtwindow=rtwindow, plotms2=plotms2, bounds=(minmz,maxmz, minrt, maxrt))
 
 def plot3d_data ( msdata, msmsruns=[], featuredata=[], outfile='plot.pdf', show=False, xrot=30, yrot=-45, featcols=['r','g','b','m','c','k'], thresh=100, ms2win=2.0, rtwindow=20.0, plotms2=True, bounds=(None, None,None,None), maxint=0, title=None):
@@ -225,7 +225,7 @@ def plot3d_data ( msdata, msmsruns=[], featuredata=[], outfile='plot.pdf', show=
     #surf=ax.(array(rtdat),array(mzdat), array(intdat))
     #fig.colorbar(surf,shrink=0.5, aspect=5)
     #plt.ylim(0.1,maxint)
-        print 'plotting feature at %s, %s, %s: colour %s'%(f[0],f[1],f[2],featcols[f[3]])
+        print('plotting feature at %s, %s, %s: colour %s'%(f[0],f[1],f[2],featcols[f[3]]))
         po=ax.plot(f[0],f[1],f[2], featcols[f[3]])
         
     ms2index=0
@@ -248,7 +248,7 @@ def plot3d_data ( msdata, msmsruns=[], featuredata=[], outfile='plot.pdf', show=
           b=0.0
       #if b>1:
       #    b=1
-      print "%s rg %s %s %s %s %s"%(len(rtdat), rg,b,rtdat[d][0],minrt, maxrt )
+      print("%s rg %s %s %s %s %s"%(len(rtdat), rg,b,rtdat[d][0],minrt, maxrt ))
       try:
           #print "testing for MS2 spectra"
           while ms2index<len(msmsruns) and msmsruns[ms2index]['scan time']>rtdat[d][0]:
@@ -272,15 +272,15 @@ def plot3d_data ( msdata, msmsruns=[], featuredata=[], outfile='plot.pdf', show=
               if plotms2==True:
                   ax.plot(xs,ys,zs, featcols[charge])
                   #print "plotting MS2 with colour %s %s"%(charge, featcols[charge])
-      except Exception,e:
-          print "Error reading MS2 runs %s: %s"%(ms2index, e)
+      except Exception as e:
+          print("Error reading MS2 runs %s: %s"%(ms2index, e))
 #print "rt: %s rtrel %s rg %s b %s\n"%(rtdat[d][0], relrt,rg,b)
       try:
           ints=intdat[d]
           if maxint>0:
               ints=[min(v, maxint) for v in intdat[d]]
           ax.plot(mzdat[d], rtdat[d], ints, c=(rg,rg,b), zdir='z', linewidth=0.2)
-      except Exception, e:
+      except Exception as e:
         raise Exception("color at %s, scale %s, rg %s b %s :%s\n"%(rtdat[d][0],relrt, rg, b, e)) 
 
     #        feat=mpatches.Rectangle((xmin,ymin), xmax-xmin, ymax-ymin, alpha=0.5,c='r')

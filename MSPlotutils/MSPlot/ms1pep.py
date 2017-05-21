@@ -17,7 +17,7 @@ import optparse,re
 try:
     import Unimod.unimod #need to write this
 except:
-    print "No Unimod database module available"
+    print("No Unimod database module available")
 
 def main():
     parser=optparse.OptionParser()
@@ -32,11 +32,11 @@ def main():
     parser.add_option("-s", "--charge", dest="charge", help="charge states to consider", default='2,3,4')
 
     (options,args)=parser.parse_args()
-    print "options settings:"
+    print("options settings:")
     stdval=dir(optparse.Values)
     for p in dir(options):
       if p not in stdval:
-        print "--%s:\t%s"%(p,getattr(options,p))
+        print("--%s:\t%s"%(p,getattr(options,p)))
     #print "%s %s %s"%(options, featcols, featfiles)
     #mzlist=ms1pep.listmz("DAVIDMARTIN", modifications=['9 Phospho (T)',])
     #xics=ms1pep.getXIC("JG-C1-1.mzML", mzlist)
@@ -83,7 +83,7 @@ def main():
 
 def plotXIC(xics, colours=['r','g','b','m','c','k'], outfile="plot.pdf", title="XIC plot"):
     '''Plots the given array of XIC using matplotlib. Colours can be specified as an array of codes. Default ['r','g','b','m','c','k']'''
-    labels=xics.keys()
+    labels=list(xics.keys())
     labels.remove('rt')
     args=[]
     index=0
@@ -126,7 +126,7 @@ def listmz(peptide, charges=[2,3,4], fixedmods={},modifications=[]):
           aa=m.group(3)
           if peptide[pos-1] in aa:
               mz = mz + float(Unimod.unimod.database.get_label(label)['delta_mono_mass'])
-  for k in fixedmods.keys():
+  for k in list(fixedmods.keys()):
       for a in peptide:
           if a==k:
               mz = mz + float(fixedmods[k])
@@ -193,7 +193,7 @@ def getXIC(mzmlfile, mzlist, tolerance=0.01, minrt=0, maxrt=None):
     '''   
     try:
       run=pymzml.run.Reader(mzmlfile)
-    except Exception, e:
+    except Exception as e:
       raise Exception("Error trying to opn mzML file %s: %s"%(mzmlfile, e))
     xics={'rt':[]}
     mzkeys=[]
@@ -202,10 +202,10 @@ def getXIC(mzmlfile, mzlist, tolerance=0.01, minrt=0, maxrt=None):
         xics["%s"%m]=[]
     if len(mzlist)==0:
       raise Exception('No mz values specified')
-    scan=run.next()
+    scan=next(run)
     while scan['scan time'] < minrt:
-      scan=run.next()
-    while scan.has_key('scan time'):
+      scan=next(run)
+    while 'scan time' in scan:
       if maxrt != None and scan['scan time'] > maxrt:
         break
       if scan['ms level'] == 2:
@@ -224,7 +224,7 @@ def getXIC(mzmlfile, mzlist, tolerance=0.01, minrt=0, maxrt=None):
             break 
           if p[0] > mzlist[mzindex]-tolerance:
             mzint=mzint+p[1]
-      scan=run.next()
+      scan=next(run)
     
     return xics
     
